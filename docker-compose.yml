@@ -1,0 +1,18 @@
+version: "3"
+services:
+  maria-db-posterr:
+    container_name: maria-db-posterr
+    image: docker.io/library/mariadb:10.5
+    volumes:
+      - database-data:/var/lib/mysql
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: mariadb
+      MYSQL_PASSWORD: mariadb
+      MYSQL_USER: mariadb
+      MYSQL_DATABASE: quote_provider_db
+
+volumes:
+  database-data:
+    driver: local

@@ -22,7 +22,7 @@ def upgrade():
     op.create_table(
         ClientTerminal.__tablename__,
         sa.Column("id", sa.String(255), primary_key=True, unique=True, index=True),
-        sa.Column("client_name", sa.String(14), unique=True, index=True, nullable=False),
+        sa.Column("client_name", sa.String(255), unique=False, index=True, nullable=False),
         sa.Column("api_key", sa.String(255), nullable=False),
         sa.Column("created_at", sa.DateTime, nullable=False)    
     )

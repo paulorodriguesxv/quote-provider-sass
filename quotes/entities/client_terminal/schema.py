@@ -10,7 +10,7 @@ def get_uuid():
 class ClientTerminalSchema(BaseModel):
     id: str = Field(default_factory=get_uuid)
     client_name: str
-    api_key: constr(max_length=14, regex='^[a-zA-Z0-9]+$') = ...
+    api_key: str = Field(default_factory=get_uuid)
     created_at: datetime = ...
 
     class Config:

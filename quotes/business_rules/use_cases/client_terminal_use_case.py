@@ -19,7 +19,6 @@ class ClientTerminalUseCase():
 
         client_terminal = ClientTerminalSchema(
             client_name=client.client_name,
-            api_key=123,
             created_at = datetime.now()            
         )        
         data = self.client_terminal_repository.add(client_terminal)

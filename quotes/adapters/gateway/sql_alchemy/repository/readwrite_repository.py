@@ -36,8 +36,14 @@ class ReadWriteRepository(ICrudRepository):
 
     def delete(self, id: str):        
         with self.session.scope() as session:
-            session.query(self.sql_alchemy_model).filter(self.sql_alchemy_model.id==id).delete()
+            item = session.query(self.sql_alchemy_model).filter(self.sql_alchemy_model.id==id)
+            data = item.first()
+            item.delete()
             session.commit()
+
+            return data
+
+
 
     def update(self, id: str, updated_model: BaseModel):        
         with self.session.scope() as session:

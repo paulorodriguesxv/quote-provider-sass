@@ -5,7 +5,7 @@ from logging import Logger
 
 class DefaultConfig():
     PORT = config("PORT", 8000)
-    LOG_LEVEL = logging.INFO
+    LOG_LEVEL = logging.DEBUG
     MAX_POSTS_PER_PAGE = config("MAX_POSTS_PER_PAGE", cast=int, default=5)
     POST_URI = config("POST_URI", "http://localhost:8000/posts/")
     FEED_URI = config("FEED_URI", "http://localhost:8000/feeds/")

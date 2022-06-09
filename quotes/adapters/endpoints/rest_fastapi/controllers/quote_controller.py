@@ -1,7 +1,7 @@
 import json
 import logging
 from typing import List
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect
+from fastapi import APIRouter, FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.responses import HTMLResponse
 from starlette.websockets import WebSocketState
 
@@ -9,7 +9,7 @@ LOGGING_FORMAT = '%(asctime)s %(levelname)-8s %(message)s'
 logging.basicConfig(level=logging.DEBUG, format=LOGGING_FORMAT)
 
 
-app = FastAPI()
+router = APIRouter()
 
 html = """
 <!DOCTYPE html>
@@ -101,12 +101,12 @@ class ConnectionManager:
 manager = ConnectionManager()
 
 
-@app.get("/")
+@router.get("/")
 async def get():
     return HTMLResponse(html)
 
 
-@app.websocket("/ws/{client_id}")
+@router.websocket("/ws/{client_id}")
 async def websocket_endpoint(websocket: WebSocket, client_id: int):
     await manager.connect(websocket)
     try:

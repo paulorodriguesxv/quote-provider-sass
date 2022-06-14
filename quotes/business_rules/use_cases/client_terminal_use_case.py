@@ -1,7 +1,5 @@
-from http import client
 from injector import inject
 from dataclasses import dataclass
-from sqlalchemy.orm import Session
 from datetime import datetime
 from quotes.business_rules.exceptions.client_terminal_exceptions import EClientTerminalAlreadyExists, EClientTerminalDoesNotExists
 from quotes.entities.client_terminal.repository import IClientTerminalRepository
@@ -35,3 +33,8 @@ class ClientTerminalUseCase():
  
     async def remove_client_terminal(self, client_id: str):
         return self.client_terminal_repository.delete(client_id)
+    
+    async def get_client_by_api_key(self, client_id: str, client_api_key: str):
+        data = await self.client_terminal_repository.get_by_id_and_api_key(client_id, client_api_key)
+        return data
+    

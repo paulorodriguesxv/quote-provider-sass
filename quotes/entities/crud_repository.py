@@ -21,4 +21,3 @@ class ICrudRepository(metaclass=ABCMeta):
     @abstractmethod
     async def delete(self, id: str):        
         pass
-           

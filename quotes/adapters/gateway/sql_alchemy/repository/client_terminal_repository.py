@@ -15,3 +15,10 @@ class ClientTerminalRepository(ReadWriteRepository, IClientTerminalRepository):
         session: SessionDatabase) -> None:
         super(ClientTerminalRepository, self).__init__(session, ClientTerminal, ClientTerminalSchema)
         self.session = session
+
+    async def get_by_id_and_api_key(self, id: str, api_key: str) -> ClientTerminal:
+        with self.session.scope() as session:
+            return session.query(self.sql_alchemy_model).filter(
+                self.sql_alchemy_model.id==id,
+                self.sql_alchemy_model.api_key==api_key).first()        
+        

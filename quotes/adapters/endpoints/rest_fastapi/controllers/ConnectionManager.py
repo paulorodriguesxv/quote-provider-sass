@@ -27,7 +27,10 @@ class ConnectionManager():
             return
         
         websocket.api_key = api_key
+        websocket.client_id = client_id
         logging.info(f"Client authorized ")
+        
+        await self.quotes_use_case.update_connected_client(client_id, True)
             
     async def handle_command(self, payload, websocket: WebSocket, client_id: str):
         print(payload)
@@ -43,7 +46,7 @@ class ConnectionManager():
         self.active_connections.append(websocket)
         websocket.api_key = None
 
-    def disconnect(self, websocket: WebSocket):        
+    def disconnect(self, websocket: WebSocket):  
         self.active_connections.remove(websocket)
 
     async def send_personal_message(self, message: str, websocket: WebSocket):
@@ -58,5 +61,5 @@ class ConnectionManager():
             try:
                 await connection.send_text(message)
             except Exception as err:
-                print(connection.client_state)
+                await self.quotes_use_case.update_connected_client(connection.client_id, False)      
                 self.disconnect(connection)

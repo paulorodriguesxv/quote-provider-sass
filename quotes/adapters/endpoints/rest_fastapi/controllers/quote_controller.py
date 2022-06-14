@@ -77,8 +77,9 @@ async def websocket_endpoint(
             data = data.get('text', data.get('bytes'))
             if type(data) == bytes:
                 data = data.decode("utf-8")
-
-            payload_decoded = json.loads(data)
+            payload_decoded = ""
+            if data:
+                payload_decoded = json.loads(data)
             await manager.handle_command(
                 payload_decoded, websocket, client_id)
             await manager.broadcast(data)

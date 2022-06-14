@@ -13,6 +13,23 @@ services:
       MYSQL_USER: mariadb
       MYSQL_DATABASE: quote_provider_db
 
+  redis:
+    image: redis
+    command: redis-server --requirepass Redis2019!
+    container_name: alpis-redis
+    ports:
+      - "6379:6379"
+
+  redisinsight:
+    image: redislabs/redisinsight
+    container_name: alpis-redisinsight
+    volumes:
+      - redisinsight:/db
+    ports:
+      - "8001:8001"
+
 volumes:
+  redisinsight:
+    driver: local            
   database-data:
     driver: local

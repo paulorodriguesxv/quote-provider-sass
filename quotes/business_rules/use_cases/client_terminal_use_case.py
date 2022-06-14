@@ -1,9 +1,12 @@
+import logging
+from xmlrpc.client import DateTime
 from injector import inject
 from dataclasses import dataclass
 from datetime import datetime
 from quotes.business_rules.exceptions.client_terminal_exceptions import EClientTerminalAlreadyExists, EClientTerminalDoesNotExists
 from quotes.entities.client_terminal.repository import IClientTerminalRepository
 from quotes.entities.client_terminal.schema import ClientTerminalCreateSchema, ClientTerminalSchema
+
 
 @inject
 @dataclass
@@ -37,4 +40,3 @@ class ClientTerminalUseCase():
     async def get_client_by_api_key(self, client_id: str, client_api_key: str):
         data = await self.client_terminal_repository.get_by_id_and_api_key(client_id, client_api_key)
         return data
-    

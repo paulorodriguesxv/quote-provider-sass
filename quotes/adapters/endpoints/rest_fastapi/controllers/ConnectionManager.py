@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+import json
 import logging
 from typing import List
 from fastapi import WebSocket
@@ -31,6 +32,14 @@ class ConnectionManager():
         logging.info(f"Client authorized ")
         
         await self.quotes_use_case.update_connected_client(client_id, True)
+        
+        quotes_to_be_monitored = await self.quotes_use_case.get_quote_monitoring(client_id)
+        await self.set_ticks_command(websocket, quotes_to_be_monitored)
+        
+    async def set_ticks_command(self, websocket: WebSocket, quotes: List[str]):
+        message = {"command": "SET_TICKS", "data": list(quotes)}
+        message = json.dumps(message)
+        await self.send_personal_message(message, websocket)
             
     async def handle_command(self, payload, websocket: WebSocket, client_id: str):
         print(payload)

@@ -98,8 +98,13 @@ async def websocket_endpoint(
     status_code=HTTPStatus.CREATED)
 async def set_quotes_to_monitoring(
     quotes: MonitoringQuotesSchema,
-    client_terminal_use_case: QuotesUseCase = Injected(QuotesUseCase)):
-    await client_terminal_use_case.set_quote_monitoring(quotes)
+    quotes_use_case: QuotesUseCase = Injected(QuotesUseCase)):
+    await quotes_use_case.set_quote_monitoring(quotes)
+    
+    manager: ConnectionManager = fastapi_beans.get(ConnectionManager)
+    
+    client_connection = list(filter(lambda client: client.client_id == quotes.client_id, manager.active_connections))
+    await manager.set_ticks_command(client_connection[0], quotes.quotes)
     
 @router.get("/monitoring/{client_id}",	
     summary="Get monitoring quotes",    
@@ -107,5 +112,5 @@ async def set_quotes_to_monitoring(
     status_code=HTTPStatus.OK)
 async def set_quotes_to_monitoring(
     client_id :str,
-    client_terminal_use_case: QuotesUseCase = Injected(QuotesUseCase)):
-    return await client_terminal_use_case.get_quote_monitoring(client_id)
+    quotes_use_case: QuotesUseCase = Injected(QuotesUseCase)):
+    return await quotes_use_case.get_quote_monitoring(client_id)

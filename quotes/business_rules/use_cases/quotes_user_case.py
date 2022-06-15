@@ -19,13 +19,17 @@ QUOTE_MONITORING_KEY = "QUOTE_MONITORING"
 class QuotesUseCase():
     client_terminal_use: ClientTerminalUseCase
 
-    async def validate_client_terminal(self, id: str, client_api_key: str):
-        client = await self.client_terminal_use.get_client_by_api_key(id, client_api_key)
+    async def _validate_client_terminal(self, client_id: str, client_api_key: str):
+        client = await self.client_terminal_use.get_client_by_api_key(
+            client_id, client_api_key)
+        
         if not client:
             raise EClientTerminalDoesNotExists()
-
+        
         return True
-    
+            
+    async def validate_client_terminal(self, client_id: str, client_api_key: str):
+        return await self._validate_client_terminal(client_id, client_api_key)
     
     async def get_connect_clients():
 
@@ -36,8 +40,6 @@ class QuotesUseCase():
     
     async def update_connected_client(self, client_id: str, connected: bool):
         pool = await get_redis_pool()
-
-        #clients = await pool.hgetall(CONNECTED_CLIENTS_KEY, encoding='utf-8')
         
         if connected:
             await pool.hset(CONNECTED_CLIENTS_KEY, client_id, datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
@@ -47,12 +49,14 @@ class QuotesUseCase():
         logger.debug(
             f"Client updated on redis: {client_id}")
         
-    async def set_quote_monitoring(self, quotes_to_monitoring: MonitoringQuotesSchema):
+    async def set_quote_monitoring(self, quotes_to_monitoring: MonitoringQuotesSchema):        
+        await self._validate_client_terminal(quotes_to_monitoring.client_id, quotes_to_monitoring.api_key)
+                
         pool = await get_redis_pool()                   
          
         await pool.hset(QUOTE_MONITORING_KEY, quotes_to_monitoring.client_id, ';'.join(quotes_to_monitoring.quotes))
         
-    async def get_quote_monitoring(self, client_id: str):
+    async def get_quote_monitoring(self, client_id: str):        
         pool = await get_redis_pool()                   
         
         all_quotes = await pool.hgetall(QUOTE_MONITORING_KEY, encoding='utf-8') 

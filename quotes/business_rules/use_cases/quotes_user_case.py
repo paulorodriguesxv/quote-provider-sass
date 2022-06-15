@@ -7,10 +7,12 @@ from quotes.business_rules.exceptions.client_terminal_exceptions import EClientT
 from quotes.business_rules.use_cases.client_terminal_use_case import ClientTerminalUseCase
 from quotes.entities.client_terminal.repository import IClientTerminalRepository
 from quotes.entities.client_terminal.schema import ClientTerminalCreateSchema, ClientTerminalSchema
+from quotes.entities.quotes.schema import MonitoringQuotesSchema
 
 logger = logging.getLogger(__name__)
 
 CONNECTED_CLIENTS_KEY = "CONNECTED_CLIENTS"
+QUOTE_MONITORING_KEY = "QUOTE_MONITORING"
 
 @inject
 @dataclass
@@ -33,7 +35,6 @@ class QuotesUseCase():
         return clients
     
     async def update_connected_client(self, client_id: str, connected: bool):
-
         pool = await get_redis_pool()
 
         #clients = await pool.hgetall(CONNECTED_CLIENTS_KEY, encoding='utf-8')
@@ -45,3 +46,16 @@ class QuotesUseCase():
 
         logger.debug(
             f"Client updated on redis: {client_id}")
+        
+    async def set_quote_monitoring(self, quotes_to_monitoring: MonitoringQuotesSchema):
+        pool = await get_redis_pool()                   
+         
+        await pool.hset(QUOTE_MONITORING_KEY, quotes_to_monitoring.client_id, ';'.join(quotes_to_monitoring.quotes))
+        
+    async def get_quote_monitoring(self, client_id: str):
+        pool = await get_redis_pool()                   
+        
+        all_quotes = await pool.hgetall(QUOTE_MONITORING_KEY, encoding='utf-8') 
+        quotes = all_quotes.get(client_id)
+        return [quote for quote in quotes.split(';')] if quotes else []
+        

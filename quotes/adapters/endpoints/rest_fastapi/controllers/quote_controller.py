@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from http import HTTPStatus
 import json
 import logging
 from typing import List
@@ -12,6 +13,7 @@ from quotes.adapters.endpoints.rest_fastapi.fastapi_injector import Injected
 
 from quotes.business_rules.use_cases.client_terminal_use_case import ClientTerminalUseCase
 from quotes.business_rules.use_cases.quotes_user_case import QuotesUseCase
+from quotes.entities.quotes.schema import MonitoringQuotesSchema
 
 LOGGING_FORMAT = '%(asctime)s %(levelname)-8s %(message)s'
 logging.basicConfig(level=logging.DEBUG, format=LOGGING_FORMAT)
@@ -88,3 +90,22 @@ async def websocket_endpoint(
         print(error)
         manager.disconnect(websocket)
         #await manager.broadcast(f"Client #{client_id} left the chat")
+
+
+@router.post("/monitoring",
+    summary="Set quotes to monitoring",    
+    description="Use this endpoint when you want to set up quotes to client terminal monitoring",  
+    status_code=HTTPStatus.CREATED)
+async def set_quotes_to_monitoring(
+    quotes: MonitoringQuotesSchema,
+    client_terminal_use_case: QuotesUseCase = Injected(QuotesUseCase)):
+    await client_terminal_use_case.set_quote_monitoring(quotes)
+    
+@router.get("/monitoring/{client_id}",	
+    summary="Get monitoring quotes",    
+    description="Use this endpoint when you want to get quotes monitored by a client terminal",  
+    status_code=HTTPStatus.OK)
+async def set_quotes_to_monitoring(
+    client_id :str,
+    client_terminal_use_case: QuotesUseCase = Injected(QuotesUseCase)):
+    return await client_terminal_use_case.get_quote_monitoring(client_id)

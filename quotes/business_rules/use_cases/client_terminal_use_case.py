@@ -7,7 +7,6 @@ from quotes.business_rules.exceptions.client_terminal_exceptions import EClientT
 from quotes.entities.client_terminal.repository import IClientTerminalRepository
 from quotes.entities.client_terminal.schema import ClientTerminalCreateSchema, ClientTerminalSchema
 
-
 @inject
 @dataclass
 class ClientTerminalUseCase():

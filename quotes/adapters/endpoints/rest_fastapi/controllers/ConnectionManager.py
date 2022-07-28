@@ -4,6 +4,7 @@ import logging
 from typing import List
 from fastapi import WebSocket
 from injector import Inject, Injector, inject, singleton, provider
+from quotes.adapters.gateway.redis.pool import get_redis_pool
 from quotes.business_rules.use_cases.quotes_user_case import QuotesUseCase
 
 
@@ -49,7 +50,21 @@ class ConnectionManager():
         if "AUTHORIZATION" in payload["command"]:
             await self.check_authorized_key(payload["data"], websocket, client_id)
             return
+        
+        await self.update_ticks(payload, websocket, client_id)
+             
 
+    async def update_ticks(self, payload, websocket: WebSocket, client_id: str):
+        if not "TICK_DATA" in payload["command"]:
+            return
+        
+        pool = await get_redis_pool()
+        for tick in payload["data"]:
+            data = payload["data"][tick]
+            await pool.publish(tick, json.dumps(data))
+        
+        print(f"Ticket received {payload}")
+            
     async def connect(self, websocket: WebSocket):
         await websocket.accept()
         self.active_connections.append(websocket)

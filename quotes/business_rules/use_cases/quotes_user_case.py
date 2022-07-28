@@ -35,7 +35,7 @@ class QuotesUseCase():
 
         pool = await get_redis_pool()
 
-        clients = await pool.hgetall(CONNECTED_CLIENTS_KEY, encoding='utf-8')
+        clients = await pool.hgetall(CONNECTED_CLIENTS_KEY)
         return clients
     
     async def update_connected_client(self, client_id: str, connected: bool):
@@ -59,7 +59,7 @@ class QuotesUseCase():
     async def get_quote_monitoring(self, client_id: str):        
         pool = await get_redis_pool()                   
         
-        all_quotes = await pool.hgetall(QUOTE_MONITORING_KEY, encoding='utf-8') 
+        all_quotes = await pool.hgetall(QUOTE_MONITORING_KEY) 
         quotes = all_quotes.get(client_id)
         return [quote for quote in quotes.split(';')] if quotes else []
         

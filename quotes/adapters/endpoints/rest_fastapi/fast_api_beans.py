@@ -1,5 +1,5 @@
 from injector import singleton, Injector
-from quotes.adapters.endpoints.rest_fastapi.controllers.ConnectionManager import ConnectionManager
+from quotes.adapters.endpoints.rest_fastapi.controllers.connection_manager import ConnectionManager
 from quotes.adapters.gateway.sql_alchemy.database import SessionDatabase
 from quotes.adapters.gateway.sql_alchemy.repository.client_terminal_repository import ClientTerminalRepository
 from quotes.business_rules.use_cases.client_terminal_use_case import ClientTerminalUseCase

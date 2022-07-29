@@ -16,6 +16,8 @@ python-decouple = "^3.6"
 PyJWT = "^2.3.0"
 PyMySQL = "^1.0.2"
 aioredis = "^2.0.1"
+fastapi-plugins = "^0.10.0"
+sse-starlette = "^1.1.4"
 
 [tool.poetry.dev-dependencies]
 pytest = "^7.1.1"

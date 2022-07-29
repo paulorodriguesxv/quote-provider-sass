@@ -5,6 +5,7 @@ from fastapi.responses import JSONResponse
 from quotes.adapters.endpoints.rest_fastapi.fastapi_injector import attach_injector
 from quotes.adapters.endpoints.rest_fastapi.controllers import client_terminal_controller
 from quotes.adapters.endpoints.rest_fastapi.controllers import quote_controller
+from quotes.adapters.endpoints.rest_fastapi.controllers import datafeed_controller
 
 
 def build(injector: Injector):
@@ -30,7 +31,11 @@ def build(injector: Injector):
 
     app.include_router(quote_controller.router,
                         prefix='/quotes',
-                        tags=['quotes'])                        
+                        tags=['quotes'])         
+    
+    app.include_router(datafeed_controller.router,
+                        prefix='/datafeed',
+                        tags=['datafeed'])                      
 
 
     attach_injector(app, injector)

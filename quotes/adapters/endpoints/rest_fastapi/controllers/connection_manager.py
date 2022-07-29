@@ -30,7 +30,7 @@ class ConnectionManager():
         
         websocket.api_key = api_key
         websocket.client_id = client_id
-        logging.info(f"Client authorized ")
+        logging.info(f"Client authorized")
         
         await self.quotes_use_case.update_connected_client(client_id, True)
         

@@ -8,7 +8,7 @@ from fastapi.responses import HTMLResponse
 from injector import Inject, Injector, inject, singleton, provider
 from starlette.websockets import WebSocketState
 from quotes.adapters.endpoints.rest_fastapi.fast_api_beans import fastapi_beans
-from quotes.adapters.endpoints.rest_fastapi.controllers.ConnectionManager import ConnectionManager
+from quotes.adapters.endpoints.rest_fastapi.controllers.connection_manager import ConnectionManager
 from quotes.adapters.endpoints.rest_fastapi.fastapi_injector import Injected
 
 from quotes.business_rules.use_cases.client_terminal_use_case import ClientTerminalUseCase
